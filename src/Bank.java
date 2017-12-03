@@ -28,7 +28,7 @@ public class Bank {
 
         Account to = accounts[t.toAccount];
         to.setNumOfTran(to.getNumOfTran() + 1);
-        to.setBalance(to.getBalance()+t.amount);
+        to.setBalance(to.getBalance() + amount);
 
         //System.out.println("Updating account with transaction");
     }
@@ -95,11 +95,18 @@ public class Bank {
             for(int i = 0; i < num; i++){
                 workers.get(i).join();
             }
+
+
+
         } catch (InterruptedException e) {
             System.out.println("interrupted");
         }
         System.out.println("All threads done");
-        
+
+        for(int i = 0; i < bank.accounts.length; i++){
+            System.out.println(bank.accounts[i].toString());
+        }
+
     }
 }
 
@@ -153,6 +160,6 @@ class Account{
     }
     @Override
     public String toString(){
-        return "acct: " + id + " bal: "+ balance + " trans: " + numOfTran ;
+        return "acct: " + getID() + " bal: "+ getBalance() + " trans: " + getNumOfTran() ;
     }
 }

@@ -30,7 +30,7 @@ public class Bank {
         to.setNumOfTran(to.getNumOfTran() + 1);
         to.setBalance(to.getBalance()+t.amount);
 
-        System.out.println("Updating account with transaction");
+        //System.out.println("Updating account with transaction");
     }
 
     private class Worker extends Thread {
@@ -39,8 +39,10 @@ public class Bank {
                 Transaction t;
                 do {
                     t = queue.take();
-                    processTransaction(t);
-                    System.out.println(this.getName() + t);
+                    if(t.fromAccount != -1){
+                        processTransaction(t);
+                        System.out.println(this.getName() + t);
+                    }
                 } while (t.fromAccount != -1);
             } catch (InterruptedException e) {
                 System.out.println("interrupted");
@@ -49,11 +51,11 @@ public class Bank {
         }
     }
 
-
     public static void main(String[] args) throws IOException{
 
         File fi = new File(args[0]);
         int num = Integer.parseInt(args[1]);
+
 
         Bank bank = new Bank();
 
@@ -65,13 +67,7 @@ public class Bank {
             workers.add(bank.new Worker());
         }
 
-
-//        Worker w1 = bank.new Worker();
-//        Worker w2 = bank.new Worker();
-
         try {
-//            w1.start();
-//            w2.start();
 
             // TODO: replace the following with code for 
             // reading from the file and putting the transactions 
@@ -92,22 +88,13 @@ public class Bank {
             for(int i = 0; i < num; i++){
                 bank.queue.put(bank.nullTrans);
             }
-//            System.out.println("Putting 10 values from main");
-//            for (int i = 0; i< 10; i++) {
-//                bank.queue.put(new Transaction(
-//                    (int)(Math.random()*10),
-//                    (int)(Math.random()*10),
-//                    (int)(Math.random()*1000)));
-//            }
 
-//            bank.queue.put(bank.nullTrans);
-//            bank.queue.put(bank.nullTrans);
-//            System.out.println("Main finished adding all transactions");
-//            // TODO: Add code here to wait for ALL the workers to finish
+            System.out.println("Main finished adding all transactions");
+
+            // TODO: Add code here to wait for ALL the workers to finish
             for(int i = 0; i < num; i++){
                 workers.get(i).join();
             }
-
         } catch (InterruptedException e) {
             System.out.println("interrupted");
         }
@@ -166,6 +153,6 @@ class Account{
     }
     @Override
     public String toString(){
-        return "Id: "+ id + ", number of transactions: " + numOfTran + "account balance: "+ balance;
+        return "acct: " + id + " bal: "+ balance + " trans: " + numOfTran ;
     }
 }

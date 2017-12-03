@@ -22,6 +22,7 @@ public class Bank {
     // If not, how do you avoid concurrency issues?
     public synchronized void processTransaction(Transaction t) {
         int amount = t.amount;
+
         Account from = accounts[t.fromAccount];
         from.setNumOfTran(from.getNumOfTran() + 1);
         from.setBalance(from.getBalance() - amount);
@@ -29,8 +30,6 @@ public class Bank {
         Account to = accounts[t.toAccount];
         to.setNumOfTran(to.getNumOfTran() + 1);
         to.setBalance(to.getBalance() + amount);
-
-        //System.out.println("Updating account with transaction");
     }
 
     private class Worker extends Thread {
@@ -41,7 +40,7 @@ public class Bank {
                     t = queue.take();
                     if(t.fromAccount != -1){
                         processTransaction(t);
-                        System.out.println(this.getName() + t);
+                        //System.out.println(this.getName() + t);
                     }
                 } while (t.fromAccount != -1);
             } catch (InterruptedException e) {
@@ -121,9 +120,9 @@ class Transaction {
         amount = amt;
     }
 
-    public String toString() {
-        return "Transaction: from = " + fromAccount + ", to = " + toAccount + " amount = " + amount;
-    }
+//    public String toString() {
+//        return "Transaction: from = " + fromAccount + ", to = " + toAccount + " amount = " + amount;
+//    }
 
 }
 
@@ -135,10 +134,11 @@ class Account{
     private int balance;
 
     public Account(int id) {
-        this.id = id;
-        this.balance = 1000;
-        this.numOfTran = 0;
+        setId(id);
+        setBalance(1000);
+        setNumOfTran(0);
     }
+
 
     public int getBalance(){
         return balance;
@@ -149,6 +149,7 @@ class Account{
     public int getNumOfTran(){
         return numOfTran;
     }
+
     public void setId(int id){
         this.id = id;
     }
@@ -156,7 +157,7 @@ class Account{
         this.numOfTran = nt;
     }
     public void setBalance(int b){
-        this.numOfTran = b;
+        this.balance = b;
     }
     @Override
     public String toString(){
